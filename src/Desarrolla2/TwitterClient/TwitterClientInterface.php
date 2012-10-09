@@ -12,6 +12,8 @@
 
 namespace Desarrolla2\TwitterClient;
 
+use Desarrolla2\RSSClient\RSSClientInterface;
+
 /**
  * 
  * Description of TwitterClientInterface
@@ -22,6 +24,12 @@ namespace Desarrolla2\TwitterClient;
  */
 interface TwitterClientInterface
 {
+
+    /**
+     *
+     * @param RSSClientInterface $client 
+     */
+    public function __construct(RSSClientInterface $client);
 
     /**
      *

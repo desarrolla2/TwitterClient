@@ -14,6 +14,7 @@ namespace Desarrolla2\TwitterClient;
 
 use Desarrolla2\TwitterClient\Util;
 use Desarrolla2\TwitterClient\TwitterClientInterface;
+use Desarrolla2\RSSClient\RSSClientInterface;
 
 /**
  * 
@@ -61,6 +62,15 @@ class TwitterClient implements TwitterClientInterface
      */
 
     const TWIT_LENGHT = 160;
+
+    /**
+     *
+     * @param RSSClientInterface $client 
+     */
+    public function __construct(RSSClientInterface $client)
+    {
+        $this->setProvider($client);
+    }
 
     /**
      *
