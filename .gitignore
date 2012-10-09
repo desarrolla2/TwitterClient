@@ -1,0 +1,8 @@
+/cache
+/build
+/composer.phar
+/vendor
+/nbproject
+*~
+*.swp
+
