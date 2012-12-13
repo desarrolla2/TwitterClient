@@ -25,6 +25,12 @@ use Desarrolla2\TwitterClient\Util;
 class UtilTest extends \PHPUnit_Framework_TestCase
 {
 
+    /**
+     * DataProvider
+     * 
+     * @return array
+     */
+
     public function parseTextDataProvider()
     {
         return array(

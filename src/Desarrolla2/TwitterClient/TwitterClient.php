@@ -15,6 +15,7 @@ namespace Desarrolla2\TwitterClient;
 use Desarrolla2\TwitterClient\Util;
 use Desarrolla2\TwitterClient\TwitterClientInterface;
 use Desarrolla2\RSSClient\RSSClientInterface;
+use Desarrolla2\RSSClient\RSSClient;
 
 /**
  * 
@@ -67,9 +68,14 @@ class TwitterClient implements TwitterClientInterface
      *
      * @param RSSClientInterface $client 
      */
-    public function __construct(RSSClientInterface $client)
+    public function __construct(RSSClientInterface $client = null)
     {
-        $this->setProvider($client);
+        if ($client){
+            $this->setProvider($client);
+        }else{
+            $this->setProvider(new RSSClient());
+        }
+        
     }
 
     /**
@@ -112,7 +118,10 @@ class TwitterClient implements TwitterClientInterface
             $twit = new Twit();
             $twit->setText($this->parseText($node->getTitle()));
             $twit->setLink($node->getLink());
-            $twit->setPubDate($node->getPubDate());
+            $date = $node->getPubDate();
+            if ($date) {
+                $twit->setPubDate($date);
+            }
             $this->addTwit($twit);
         }
 

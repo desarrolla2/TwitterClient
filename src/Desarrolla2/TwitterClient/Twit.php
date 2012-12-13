@@ -112,6 +112,10 @@ class Twit
         return $this->pubDate;
     }
 
+    /**
+     * 
+     * @return int
+     */
     public function getTimestamp()
     {
         if ($this->pubDate) {
