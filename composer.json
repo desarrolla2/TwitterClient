@@ -5,23 +5,21 @@
     "type": "library",
     "license": "MIT",
     "authors": [
-    {
-        "name": "Daniel González",
-        "homepage": "http://desarrolla2.com/"
-    }
+        {
+            "name": "Daniel González",
+            "homepage": "http://desarrolla2.com/"
+        }
     ],
-    "support" : {
+    "support": {
         "issues": "https://github.com/desarrolla2/TwitterClient/issues"
     },
-    "require": 
-    {
-       "php": ">=5.3.0",
-       "desarrolla2/rss-client" : "*"
+    "require": {
+        "php": ">=5.3.0",
+        "guzzle/guzzle": "~3.7"
     },
-    "autoload": 
-    {
+    "autoload": {
         "psr-0": {
-             "Desarrolla2\\TwitterClient\\": "src/" 
+            "Desarrolla2\\TwitterClient\\": "src/"
         }
     },
     "minimum-stability": "dev"

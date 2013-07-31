@@ -2,190 +2,84 @@
 
 /**
  * This file is part of the TwitterClient proyect.
- * 
- * Copyright (c)
- * Daniel González <daniel.gonzalez@freelancemadrid.es> 
- * 
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Desarrolla2\TwitterClient;
 
-use Desarrolla2\TwitterClient\Util;
-use Desarrolla2\TwitterClient\TwitterClientInterface;
-use Desarrolla2\RSSClient\RSSClientInterface;
-use Desarrolla2\RSSClient\RSSClient;
+use Guzzle\Http\Client;
+use Guzzle\Plugin\Oauth\OauthPlugin;
 
 /**
- * 
- * Description of TwitterClient
  *
- * @author : Daniel González <daniel.gonzalez@freelancemadrid.es> 
- * @file : TwitterClient.php , UTF-8
- * @date : Oct 9, 2012 , 10:25:35 PM
+ * TwitterClient
+ *
+ * @author : Daniel González <daniel.gonzalez@freelancemadrid.es>
  */
+
 class TwitterClient implements TwitterClientInterface
 {
 
-    /**
-     * @var Desarrolla2\RSSClient\RSSClientInterface
-     */
-    protected $provider;
+    protected $handler;
+
+    protected $consumer_key;
+
+    protected $consumer_secret;
+
+    protected $token;
+
+    protected $token_secret;
 
     /**
-     * @var string
+     * @param string $consumer_key
+     * @param string $consumer_secret
+     * @param string $token
+     * @param string $token_secret
      */
-    protected $screenName;
-
-    /**
-     * @var string
-     */
-    protected $searchQuery;
-
-    /**
-     * @var string
-     */
-    protected $urlScreenName = 'http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=';
-
-    /**
-     * @var string
-     */
-    protected $urlSearch = 'http://api.twitter.com/1/statuses/user_timeline.rss?screen_name=';
-
-    /**
-     * @var array 
-     */
-    protected $twits = array();
-
-    /**
-     * @var string
-     */
-
-    const TWIT_LENGHT = 160;
-
-    /**
-     *
-     * @param RSSClientInterface $client 
-     */
-    public function __construct(RSSClientInterface $client = null)
+    public function __construct($consumer_key, $consumer_secret, $token, $token_secret)
     {
-        if ($client){
-            $this->setProvider($client);
-        }else{
-            $this->setProvider(new RSSClient());
-        }
-        
+        $this->handler = new Client('https://api.twitter.com/{version}', array(
+            'version' => '1.1'
+        ));
+
+        $this->handler->addSubscriber(
+            new OauthPlugin(array(
+                'consumer_key' => $consumer_key,
+                'consumer_secret' => $consumer_secret,
+                'token' => $token,
+                'token_secret' => $token_secret
+            ))
+        );
     }
 
     /**
-     *
-     * @param RSSClientInterface $client 
+     * @return bool
      */
-    public function setProvider(RSSClientInterface $client)
+    public function getUserTimeLineLast()
     {
-        $this->provider = $client;
-    }
-
-    /**
-     *
-     * @param string $screenName 
-     */
-    public function setScreenName($screenName)
-    {
-        $this->screenName = (string) $screenName;
-    }
-
-    /**
-     * count number of twits
-     */
-    public function count()
-    {
-        return count($this->twits);
-    }
-
-    /**
-     * 
-     */
-    public function fetch($limit = 20)
-    {
-        $channelName = __CLASS__ . '_' . $this->screenName;
-        $limit = (int) $limit;
-        $this->provider->setFeed($this->getScreenNameUrl(), $channelName);
-        $nodes = $this->provider->fetch($channelName, $limit);
-
-        foreach ($nodes as $node) {
-            $twit = new Twit();
-            $twit->setText($this->parseText($node->getTitle()));
-            $twit->setLink($node->getLink());
-            $date = $node->getPubDate();
-            if ($date) {
-                $twit->setPubDate($date);
-            }
-            $this->addTwit($twit);
+        $items = $this->getUserTimeLine();
+        if (!$items) {
+            return false;
         }
 
-        return $this->getTwits($limit);
+        return $items[0];
     }
 
     /**
-     * 
-     * @return Twit | false
+     * @return array|false
      */
-    public function fetchOne()
+    public function getUserTimeLine()
     {
-        $twits = $this->fetch(1);
-        if (count($twits)) {
-            return $twits[0];
+        $request = $this->handler->get('statuses/user_timeline.json');
+        $response = $request->send();
+        if ($response->getStatusCode() != 200) {
+            return false;
         }
-        return false;
-    }
 
-    /**
-     *
-     * @param Twit $twit
-     */
-    protected function addTwit(Twit $twit)
-    {
-        array_push($this->twits, $twit);
-    }
+        $items = json_decode($response->getBody());
 
-    /**
-     *
-     * @return string $screenName
-     */
-    protected function getScreenNameUrl()
-    {
-        return $this->urlScreenName . $this->screenName;
+        return $items;
     }
-
-    /**
-     * Retrieves a $limit number of twits
-     * 
-     * @param int $limit
-     * @return array $twits
-     */
-    protected function getTwits($limit = 20)
-    {
-        $limit = (int) $limit;
-        $response = array();
-        for ($i = 0; $i < $limit; $i++) {
-            if (isset($this->twits[$i])) {
-                array_push($response, $this->twits[$i]);
-            }
-        }
-        return $response;
-    }
-
-    /**
-     * Parse Twit Text: links, users, and hashtag
-     * @param type $text
-     * @return type 
-     */
-    protected function parseText($text)
-    {
-        $text = trim(substr($text, (strlen($this->screenName) + 2), self::TWIT_LENGHT));
-        return Util::parseText($text);
-    }
-
 }

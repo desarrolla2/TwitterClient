@@ -1,11 +1,8 @@
 <?php
 
 /**
- * This file is part of the TwitterClient proyect.
- * 
- * Copyright (c)
- * Daniel González <daniel.gonzalez@freelancemadrid.es> 
- * 
+ * This file is part of the TwitterClient project.
+ *
  * This source file is subject to the MIT license that is bundled
  * with this package in the file LICENSE.
  */
@@ -15,19 +12,17 @@ namespace Desarrolla2\TwitterClient\Test;
 use Desarrolla2\TwitterClient\Util;
 
 /**
- * 
+ *
  * Description of UtilTest
  *
- * @author : Daniel González <daniel.gonzalez@freelancemadrid.es> 
- * @file : UtilTest.php , UTF-8
- * @date : Oct 9, 2012 , 11:01:38 PM
+ * @author : Daniel González <daniel.gonzalez@freelancemadrid.es>
  */
 class UtilTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      * DataProvider
-     * 
+     *
      * @return array
      */
 
@@ -48,5 +43,4 @@ class UtilTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(Util::parseText($test_case), $result);
     }
-
 }
