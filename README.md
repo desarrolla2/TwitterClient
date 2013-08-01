@@ -1,4 +1,4 @@
-# RSSClient
+# TwitterClient
 
 [![Build Status](https://secure.travis-ci.org/desarrolla2/TwitterClient.png)](http://travis-ci.org/desarrolla2/TwitterClient)
 
