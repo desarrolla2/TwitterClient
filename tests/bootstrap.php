@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the TwitterClient proyect.
+ * This file is part of the TwitterClient project.
  * 
  * Copyright (c)
  * 

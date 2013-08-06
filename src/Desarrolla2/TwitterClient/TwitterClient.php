@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the TwitterClient proyect.
+ * This file is part of the TwitterClient project.
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,14 +22,29 @@ use Guzzle\Plugin\Oauth\OauthPlugin;
 class TwitterClient implements TwitterClientInterface
 {
 
+    /**
+     * @var \Guzzle\Http\Client
+     */
     protected $handler;
 
+    /**
+     * @var string
+     */
     protected $consumer_key;
 
+    /**
+     * @var string
+     */
     protected $consumer_secret;
 
+    /**
+     * @var string
+     */
     protected $token;
 
+    /**
+     * @var string
+     */
     protected $token_secret;
 
     /**
@@ -64,7 +79,7 @@ class TwitterClient implements TwitterClientInterface
             return false;
         }
 
-        return $items[0];
+        return $items->first();
     }
 
     /**
@@ -80,6 +95,6 @@ class TwitterClient implements TwitterClientInterface
 
         $items = json_decode($response->getBody());
 
-        return $items;
+        return TwitFactory::createCollection($items);
     }
 }
