@@ -70,11 +70,12 @@ class TwitterClient implements TwitterClientInterface
     }
 
     /**
+     * @param null $user
      * @return bool
      */
-    public function getUserTimeLineLast()
+    public function getUserTimeLineLast($user = null)
     {
-        $items = $this->getUserTimeLine();
+        $items = $this->getUserTimeLine($user, 1);
         if (!$items) {
             return false;
         }
@@ -83,11 +84,19 @@ class TwitterClient implements TwitterClientInterface
     }
 
     /**
+     * @param null $user
+     * @param int  $limit
      * @return array|false
      */
-    public function getUserTimeLine()
+    public function getUserTimeLine($user = null, $limit = 20)
     {
         $request = $this->handler->get('statuses/user_timeline.json');
+        if ($user) {
+            $request->getQuery()->set('screen_name', $user);
+        }
+        if ($limit) {
+            $request->getQuery()->set('count', $limit);
+        }
         $response = $request->send();
         if ($response->getStatusCode() != 200) {
             return false;
@@ -95,6 +104,6 @@ class TwitterClient implements TwitterClientInterface
 
         $items = json_decode($response->getBody());
 
-        return TwitFactory::createCollection($items);
+        return TwitFactory::createCollection($items, $limit);
     }
 }

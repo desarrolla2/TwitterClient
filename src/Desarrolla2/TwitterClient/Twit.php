@@ -54,6 +54,10 @@ class Twit
      */
     protected $created_at;
 
+    public function __toString(){
+        return $this->getText();
+    }
+
     /**
      * @param \DateTime $created_at
      */
